@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/mmuflih/go-di-arch/container"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/mmuflih/go-di-arch/app"
@@ -21,17 +22,17 @@ func main() {
 
 	httplib.InitJWTMiddlewareWithRole([]byte("Go-DI-arch"), jwt.SigningMethodHS512, myrole)
 
-	c := BuildContainer()
+	c := container.BuildContainer()
 
-	if err := c.Invoke(InvokeRoute); err != nil {
+	if err := c.Invoke(container.InvokeRoute); err != nil {
 		panic(err)
 	}
 
-	if err := c.Provide(NewRoute); err != nil {
+	if err := c.Provide(container.NewRoute); err != nil {
 		panic(err)
 	}
 
-	if err := c.Invoke(func(s *ServerRoute) {
+	if err := c.Invoke(func(s *container.ServerRoute) {
 		s.Run()
 	}); err != nil {
 		fmt.Println(err)

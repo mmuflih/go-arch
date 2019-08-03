@@ -1,4 +1,4 @@
-package container
+package provider
 
 import (
 	"database/sql"

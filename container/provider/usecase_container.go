@@ -1,4 +1,4 @@
-package container
+package provider
 
 import (
 	"github.com/mmuflih/go-di-arch/context/ping"

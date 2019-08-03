@@ -1,7 +1,7 @@
-package main
+package container
 
 import (
-	"github.com/mmuflih/go-di-arch/container"
+	"github.com/mmuflih/go-di-arch/container/provider"
 	"go.uber.org/dig"
 )
 
@@ -15,10 +15,10 @@ import (
 func BuildContainer() *dig.Container {
 	c := dig.New()
 
-	c = container.BuildConfigProvider(c)
-	c = container.BuildRepositoryProvider(c)
-	c = container.BuildUseCaseProvider(c)
-	c = container.BuildHandlerProvider(c)
+	c = provider.BuildConfigProvider(c)
+	c = provider.BuildRepositoryProvider(c)
+	c = provider.BuildUseCaseProvider(c)
+	c = provider.BuildHandlerProvider(c)
 
 	return c
 }
