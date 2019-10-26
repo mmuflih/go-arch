@@ -13,7 +13,7 @@ import (
  **/
 
 func GenerateUUID() string {
-	out, _ := uuid.NewV4()
+	out := uuid.NewV4()
 	strOut := out.String()
 	return strings.Replace(strOut, "\n", "", -1)
 }
