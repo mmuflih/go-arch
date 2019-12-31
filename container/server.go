@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/mmuflih/envgo/conf"
-	"github.com/mmuflih/go-di-arch/app"
 	"log"
 	"net/http"
 	"time"
@@ -32,7 +31,7 @@ func NewRoute(c conf.Config, handler http.Handler, router *mux.Router) *ServerRo
 }
 
 func (s *ServerRoute) Run() {
-	app.Logger("Application is running at ", time.Now().Format("2006-01-02 15:04:05.000"))
-	app.Logger("Server listen on", s.config.GetString(`server.address`))
+	log.Println("Application is running at ", time.Now().Format("2006-01-02 15:04:05.000"))
+	log.Println("Server listen on", s.config.GetString(`server.address`))
 	log.Fatal(http.ListenAndServe(s.config.GetString(`server.address`), s.handler))
 }

@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/mmuflih/go-di-arch/container"
-
 	"github.com/dgrijalva/jwt-go"
-	"github.com/mmuflih/go-di-arch/app"
+	"github.com/mmuflih/go-di-arch/container"
+	"github.com/mmuflih/go-di-arch/role"
 	"github.com/mmuflih/go-httplib/httplib"
 )
 
@@ -16,9 +15,9 @@ var _ = dig.Name
 func main() {
 	myrole := make(map[string][]string)
 
-	myrole[app.ADMIN] = []string{app.ADMIN}
-	myrole[app.LEADER] = []string{app.LEADER, app.ADMIN}
-	myrole[app.USER] = []string{app.USER, app.LEADER, app.ADMIN}
+	myrole[role.ADMIN] = []string{role.ADMIN}
+	myrole[role.LEADER] = []string{role.LEADER, role.ADMIN}
+	myrole[role.USER] = []string{role.USER, role.LEADER, role.ADMIN}
 
 	httplib.InitJWTMiddlewareWithRole([]byte("Go-DI-arch"), jwt.SigningMethodHS512, myrole)
 

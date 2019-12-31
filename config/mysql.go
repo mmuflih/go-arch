@@ -2,7 +2,7 @@ package config
 
 import (
 	"database/sql"
-	"github.com/mmuflih/go-di-arch/app"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/mmuflih/envgo/conf"
@@ -16,7 +16,7 @@ func NewMysqlConn(cfg conf.Config) (error, *sql.DB) {
 	dbPort := cfg.GetString(`mysql.port`)
 
 	uri := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?parseTime=true"
-	app.Logger(uri)
+	log.Println(uri)
 	db, err := sql.Open("mysql", uri)
 
 	err = db.Ping()
