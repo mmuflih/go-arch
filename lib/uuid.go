@@ -6,14 +6,15 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-/**
- * Created by M. Muflih Kholidin
- * mmuflic@gmail.com
+/*
+ * Created by Muhammad Muflih Kholidin
  * https://github.com/mmuflih
- **/
+ * muflic.24@gmail.com
+ * at: 1/1/20 6:31 AM
+ */
 
 func GenerateUUID() string {
-	out, _ := uuid.NewV4()
+	out := uuid.NewV4()
 	strOut := out.String()
 	return strings.Replace(strOut, "\n", "", -1)
 }

@@ -27,3 +27,4 @@ import:
 - package: github.com/globalsign/mgo
 - package: go.uber.org/dig
   version: ^1
+- package: github.com/mmuflih/datelib
