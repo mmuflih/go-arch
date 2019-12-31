@@ -14,6 +14,14 @@
     sql-migrate up
     fresh
     
-## Endpoint Doc
-- [User Endpoints](docs/user_endpoint.md)
-
+## Project Structure
+    - Main_Project
+        - config
+        - container
+        - context
+        - domain
+        - httphandler
+        - lib
+        - migrations
+        - role
+        
