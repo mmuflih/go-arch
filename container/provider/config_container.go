@@ -1,14 +1,13 @@
 package provider
 
 import (
-	"database/sql"
-	"github.com/globalsign/mgo"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/mmuflih/envgo/conf"
 	"github.com/mmuflih/go-di-arch/config"
 	"github.com/mmuflih/go-httplib/httplib"
 	"go.uber.org/dig"
-	"net/http"
 )
 
 /**
@@ -21,8 +20,11 @@ import (
 func BuildConfigProvider(c *dig.Container) *dig.Container {
 	var err error
 
-	if err = c.Provide(func() []byte {
-		return []byte("Go-DI-arch")
+	if err = c.Provide(func(c conf.Config) *config.Keys {
+		signature := []byte(c.GetString("key"))
+		return &config.Keys{
+			Signature: signature,
+		}
 	}); err != nil {
 		panic(err)
 	}
@@ -33,13 +35,14 @@ func BuildConfigProvider(c *dig.Container) *dig.Container {
 		panic(err)
 	}
 
-	if err = c.Provide(func(c conf.Config) (error, *sql.DB) {
-		return config.NewMysqlConn(c)
+	if err = c.Provide(func(c conf.Config) (*config.MongoConnections, error) {
+		return config.NewMongoDB2(c)
 	}); err != nil {
 		panic(err)
 	}
-	if err = c.Provide(func(c conf.Config) (error, *mgo.Database) {
-		return config.NewMongoDB(c)
+
+	if err = c.Provide(func(c conf.Config) (*config.MyConn, error) {
+		return config.NewMysqlGormConn(c)
 	}); err != nil {
 		panic(err)
 	}

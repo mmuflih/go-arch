@@ -16,5 +16,11 @@ func BuildRepositoryProvider(c *dig.Container) *dig.Container {
 	if err := c.Provide(mysql.NewUserRepo); err != nil {
 		panic(err)
 	}
+	if err := c.Provide(mysql.NewUserPasswordRepo); err != nil {
+		panic(err)
+	}
+	if err := c.Provide(mysql.NewUserEmailRepo); err != nil {
+		panic(err)
+	}
 	return c
 }

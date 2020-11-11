@@ -23,16 +23,7 @@ func BuildHandlerProvider(c *dig.Container) *dig.Container {
 		panic(err)
 	}
 
-	if err := c.Provide(user.NewAddHandler); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(user.NewEditHandler); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(user.NewGetHandler); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(user.NewListHandler); err != nil {
+	if err := c.Provide(user.NewBaseHandler); err != nil {
 		panic(err)
 	}
 

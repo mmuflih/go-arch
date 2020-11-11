@@ -25,3 +25,26 @@
         - migrations
         - role
         
+## Endpoints
+- Register
+        /api/v1/user/register
+        
+        [request body]
+
+        {
+            "email": "mmuflic@gmail.com",
+            "pin": "123456"
+        }
+
+- Login
+        /api/v1/user/login
+        
+        [request body]
+
+        {
+            "email": "mmuflic@gmail.com",
+            "pin": "123456"
+        }
+
+- Get Me
+        /api/v1/user

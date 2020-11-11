@@ -2,11 +2,15 @@ package container
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/mmuflih/envgo/conf"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/mux"
+	"github.com/mmuflih/envgo/conf"
+	"github.com/mmuflih/go-di-arch/role"
+	"github.com/mmuflih/go-httplib/httplib"
 )
 
 /**
@@ -23,6 +27,14 @@ type ServerRoute struct {
 }
 
 func NewRoute(c conf.Config, handler http.Handler, router *mux.Router) *ServerRoute {
+	myrole := make(map[string][]string)
+
+	myrole[role.ADMIN] = []string{role.ADMIN}
+	myrole[role.LEADER] = []string{role.LEADER, role.ADMIN}
+	myrole[role.USER] = []string{role.USER, role.LEADER, role.ADMIN}
+
+	httplib.InitJWTMiddlewareWithRole([]byte(c.GetString("key")), jwt.SigningMethodHS512, myrole)
+
 	for _, l := range c.GetStringSlice("env_label") {
 		fmt.Println(l)
 	}

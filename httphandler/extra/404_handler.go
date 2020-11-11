@@ -3,7 +3,6 @@ package extra
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 )
 
 type P404Handler interface {
@@ -17,7 +16,7 @@ func NewP404Handler() P404Handler {
 }
 
 func (this p404handler) Handle(w http.ResponseWriter, r *http.Request) {
-	data := r.RemoteAddr + r.RequestURI + time.Now().Format("2006-01-02:15:04:05")
+	data := "Sssssst! Silence is golden..."
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNotFound)
 

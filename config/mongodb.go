@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/globalsign/mgo"
 	"github.com/mmuflih/envgo/conf"
+	"github.com/mmuflih/go-di-arch/app"
+	"gopkg.in/mgo.v2"
 )
 
 /**
@@ -12,17 +13,34 @@ import (
  * at: 2019-01-31 09:25
 **/
 
-func NewMongoDB(cfg conf.Config) (error, *mgo.Database) {
+type MongoConnections struct {
+	Conn1 *mgo.Database
+}
+
+func NewMongoDB2(cfg conf.Config) (*MongoConnections, error) {
 	address := cfg.GetString(`mongodb.address`)
 	user := cfg.GetString(`mongodb.user`)
 	pass := cfg.GetString(`mongodb.pass`)
 	database := cfg.GetString(`mongodb.database`)
 	port := cfg.GetString(`mongodb.port`)
-	session, err := mgo.Dial(address + ":" + port)
-	dbSession := session.DB(database)
 	auth := cfg.GetBool(`mongodb.auth`)
-	if auth {
-		dbSession.Login(user, pass)
+	app.Logger("=>>", address, port, database)
+
+	session, err := mgo.Dial(address + ":" + port)
+	if err != nil {
+		app.Logger("<>>", "Mongodb Conn", err)
+		return nil, err
 	}
-	return err, dbSession
+	dbSession1 := session.DB(database)
+	app.Logger("=>>", "Mongo auth", auth)
+	if auth {
+		err := dbSession1.Login(user, pass)
+		if err != nil {
+			app.Logger("<>>", "Mongodb Conn", err)
+			return nil, err
+		}
+	}
+	return &MongoConnections{
+		Conn1: dbSession1,
+	}, nil
 }

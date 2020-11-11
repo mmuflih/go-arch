@@ -1,12 +1,12 @@
 package mysql
 
 import (
-	"database/sql"
-	"fmt"
+	"time"
 
+	"github.com/mmuflih/go-di-arch/config"
 	"github.com/mmuflih/go-di-arch/domain/model"
-
-	"github.com/mmuflih/go-di-arch/domain/repository"
+	paginator "github.com/mmuflih/gorm-paginator"
+	"gorm.io/gorm"
 )
 
 /**
@@ -16,121 +16,57 @@ import (
  * at: 2019-03-09 21:15
 **/
 
-type userService struct {
-	db *sql.DB
+type UserRepository interface {
+	DBConn() *gorm.DB
+	Save(u *model.User, tx *gorm.DB) error
+	Update(u *model.User, tx *gorm.DB) error
+	SetLastLogin(u *model.User) error
+	Find(id uint64) (error, *model.User)
+	FindBy(page, size int) *paginator.Paginator
 }
 
-func (us userService) DBConn() *sql.DB {
+type userService struct {
+	db *gorm.DB
+}
+
+func (us userService) DBConn() *gorm.DB {
 	return us.db
 }
 
-func (us userService) Save(u *model.User, tx *sql.Tx) error {
-	query := "INSERT INTO users (id, email, name, phone, password, role, last_login) " +
-		" VALUES (?, ?, ?, ?, ?, ?, ?) "
-	st, err := tx.Prepare(query)
-	if err != nil {
-		return err
-	}
-	_, err = st.Exec(u.ID, u.Email, u.Name, u.Phone, u.Password, u.Role, u.LastLogin)
-	if err != nil {
-		return err
-	}
-	defer st.Close()
-	return err
+func (us userService) Save(u *model.User, tx *gorm.DB) error {
+	return tx.Save(u).Error
 }
 
-func (us userService) Update(u *model.User, tx *sql.Tx) error {
-	query := "UPDATE users " +
-		" SET email = ?, " +
-		"	name = ?, " +
-		"	phone = ?, " +
-		" 	password = ?, " +
-		"   role = ? " +
-		" WHERE id = ?"
-	st, err := tx.Prepare(query)
-	if err != nil {
-		return err
-	}
-	_, err = st.Exec(u.Email, u.Name, u.Phone, u.Password, u.Role, u.ID)
-	if err != nil {
-		return err
-	}
-	defer st.Close()
-	return err
-	panic("implement me")
+func (us userService) SetLastLogin(u *model.User) error {
+	u.LastLogin = time.Now()
+	return us.db.
+		Updates(u).
+		Error
 }
 
-func (us userService) Find(id string) (error, *model.User) {
-	query := "SELECT id, name, email, phone, password, role, last_login, " +
-		" created_at, updated_at " +
-		"	FROM users " +
-		" WHERE id = ?"
-	row := us.db.QueryRow(query, id)
+func (us userService) Update(u *model.User, tx *gorm.DB) error {
+	return tx.Model(&model.User{}).Updates(u).
+		Where("id", u.ID).Error
+}
+
+func (us userService) Find(id uint64) (error, *model.User) {
 	u := new(model.User)
-	err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Phone, &u.Password, &u.Role,
-		&u.LastLogin, &u.CreatedAt, &u.UpdatedAt)
-	if err != nil {
-		return err, nil
-	}
-	return nil, u
+	err := us.db.First(&u, id).Error
+	return err, u
 }
 
-func (us userService) FindByEmail(email string) (error, *model.User) {
-	query := "SELECT id, name, email, phone, password, role, last_login, " +
-		" created_at, updated_at " +
-		"	FROM users " +
-		" WHERE email = ?"
-	row := us.db.QueryRow(query, email)
-	u := new(model.User)
-	err := row.Scan(&u.ID, &u.Name, &u.Email, &u.Phone, &u.Password, &u.Role,
-		&u.LastLogin, &u.CreatedAt, &u.UpdatedAt)
-	if err != nil {
-		return err, nil
-	}
-	return nil, u
+func (us userService) FindBy(page, size int) *paginator.Paginator {
+	var users []model.User
+	paginatior := paginator.Make(&paginator.Config{
+		DB:      us.db,
+		Page:    page,
+		Size:    size,
+		OrderBy: []string{"id desc"},
+		ShowSQL: true,
+	}, &users)
+	return paginatior
 }
 
-func (us userService) FindAll(q string, page, size int) (error, []*model.User) {
-	query := "SELECT id, name, email, phone, password, role, last_login, " +
-		" created_at, updated_at " +
-		"	FROM users " +
-		" WHERE (name LIKE '%" + q + "%' " +
-		" 	OR email LIKE '%" + q + "%'" +
-		" 	OR phone LIKE '%" + q + "%') " +
-		" LIMIT ? OFFSET ?"
-	rows, err := us.db.Query(query, size, (page-1)*size)
-	if err != nil {
-		return err, nil
-	}
-	var users []*model.User
-	for rows.Next() {
-		u := new(model.User)
-		err := rows.Scan(&u.ID, &u.Name, &u.Email, &u.Phone, &u.Password, &u.Role,
-			&u.LastLogin, &u.CreatedAt, &u.UpdatedAt)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		users = append(users, u)
-	}
-	return nil, users
-}
-
-func (us userService) FindAllCount(q string) int {
-	query := "SELECT count(id) " +
-		"	FROM users " +
-		" WHERE (name LIKE '%" + q + "%' " +
-		" 	OR email LIKE '%" + q + "%'" +
-		" 	OR phone LIKE '%" + q + "%')"
-	row := us.db.QueryRow(query)
-	c := 0
-	err := row.Scan(&c)
-	if err != nil {
-		return 0
-	}
-	return c
-}
-
-func NewUserRepo(db *sql.DB) repository.UserRepository {
-	return &userService{db}
+func NewUserRepo(myConn *config.MyConn) UserRepository {
+	return &userService{myConn.Conn1}
 }
