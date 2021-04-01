@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/mmuflih/go-di-arch/config"
 	"github.com/mmuflih/go-di-arch/domain/model"
 )
 
@@ -15,19 +14,7 @@ import (
  * muflic.24@gmail.com
  **/
 
-type GenerateUsecase interface {
-	ClaimToken(*model.User) GetTokenResponse
-}
-
-type generateUC struct {
-	keys *config.Keys
-}
-
-func NewGenerateUsecase(keys *config.Keys) GenerateUsecase {
-	return &generateUC{keys}
-}
-
-func (gu *generateUC) ClaimToken(u *model.User) GetTokenResponse {
+func (gu handle) ClaimToken(u *model.User) GetTokenResponse {
 	/* Create the token */
 	token := jwt.New(jwt.SigningMethodHS512)
 
@@ -50,7 +37,7 @@ func (gu *generateUC) ClaimToken(u *model.User) GetTokenResponse {
 	return gu.createResponse(auth, u)
 }
 
-func (gu *generateUC) createResponse(auth AccessToken,
+func (gu handle) createResponse(auth AccessToken,
 	u *model.User) GetTokenResponse {
 	return GetTokenResponse{
 		auth,

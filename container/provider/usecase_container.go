@@ -3,7 +3,6 @@ package provider
 import (
 	"github.com/mmuflih/go-di-arch/context/ping"
 	"github.com/mmuflih/go-di-arch/context/user"
-	"go.uber.org/dig"
 )
 
 /**
@@ -13,26 +12,14 @@ import (
  * at: 2019-02-06 19:47
 **/
 
-func BuildUseCaseProvider(c *dig.Container) *dig.Container {
-	if err := c.Provide(ping.NewPingUsecase); err != nil {
-		panic(err)
-	}
+func Usecases() []interface{} {
 
-	if err := c.Provide(user.NewGenerateUsecase); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(user.NewGetAuthUserUsecase); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(user.NewGetMeUsecase); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(user.NewLoginUsecase); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(user.NewRegisterUsecase); err != nil {
-		panic(err)
-	}
+	var u []interface{}
 
-	return c
+	u = append(u, ping.NewPingUsecase)
+	u = append(u, user.NewHandler)
+	u = append(u, user.NewGetAuthUserUsecase)
+	u = append(u, user.NewReader)
+
+	return u
 }

@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mmuflih/go-di-arch/httphandler/extra"
-	"github.com/mmuflih/go-di-arch/httphandler/ping"
-	"github.com/mmuflih/go-di-arch/httphandler/user"
+	"github.com/mmuflih/go-di-arch/http/handler/auth"
+	"github.com/mmuflih/go-di-arch/http/handler/p404"
+	"github.com/mmuflih/go-di-arch/http/handler/ping"
 )
 
 /**
@@ -16,7 +16,7 @@ import (
  * at: 2019-02-09 20:49
 **/
 func InvokeRoute(route *mux.Router,
-	pingH ping.PingHandler, p404H extra.P404Handler, userH user.BaseHandler,
+	pingH ping.BaseHandler, p404H p404.BaseHandler, userH auth.BaseHandler,
 ) {
 	route.NotFoundHandler = http.HandlerFunc(p404H.Handle)
 	/** api v1 route */

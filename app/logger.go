@@ -8,11 +8,15 @@ import (
 )
 
 func Logger(data ...interface{}) {
-	log.Println(flagInfo(), data)
+	log.Println(flagInfo(), "::", data)
+}
+
+func Success(data ...interface{}) {
+	log.Println(flagInfo(), "=>", data)
 }
 
 func Error(e error) error {
-	log.Println(flagErr(), e)
+	log.Println(flagErr(), "<>", e.Error())
 	return e
 }
 
@@ -46,9 +50,13 @@ func NewErrors(d ...string) (es []error) {
 }
 
 func flagErr() string {
-	return "[ERROR-" + time.Now().Format("20060102-150405.0000") + "]"
+	return "[ERR-" + time.Now().Format("20060102-150405.0000") + "]"
 }
 
 func flagInfo() string {
-	return "[INFO-" + time.Now().Format("20060102-150405.0000") + "]"
+	return "[INF-" + time.Now().Format("20060102-150405.0000") + "]"
+}
+
+func flagSuccess() string {
+	return "[SUC-" + time.Now().Format("20060102-150405.0000") + "]"
 }

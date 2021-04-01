@@ -6,7 +6,7 @@ import (
 
 	"github.com/mmuflih/go-di-arch/app"
 	"github.com/mmuflih/go-di-arch/domain/model"
-	"github.com/mmuflih/go-di-arch/domain/repository/mysql"
+	"github.com/mmuflih/go-di-arch/http/requests"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,34 +17,10 @@ import (
  * muflic.24@gmail.com
  **/
 
-type LoginUsecase interface {
-	Handle(req LoginRequest) (error, interface{})
-}
-
-type LoginRequest interface {
-	GetEmail() string
-	GetPin() string
-}
-
-type loginUsecase struct {
-	uRepo      mysql.UserRepository
-	uEmailRepo mysql.UserEmailRepository
-	uPassRepo  mysql.UserPasswordRepository
-	tokenUC    GenerateUsecase
-}
-
-func NewLoginUsecase(uEmailRepo mysql.UserEmailRepository,
-	uPassRepo mysql.UserPasswordRepository,
-	uRepo mysql.UserRepository,
-	tokenUC GenerateUsecase,
-) LoginUsecase {
-	return &loginUsecase{uRepo, uEmailRepo, uPassRepo, tokenUC}
-}
-
-func (lu *loginUsecase) Handle(req LoginRequest) (error, interface{}) {
+func (lu handle) Login(req requests.LoginRequest) (error, interface{}) {
 	var userID uint64
 	/** check email */
-	err, email := lu.validateEmail(req.GetEmail())
+	err, email := lu.validateEmail(req.Email)
 	if err != nil && email != nil {
 		return err, nil
 	}
@@ -59,7 +35,7 @@ func (lu *loginUsecase) Handle(req LoginRequest) (error, interface{}) {
 		userID = email.UserID
 	}
 
-	err = lu.validatePassword(userID, req.GetPin())
+	err = lu.validatePassword(userID, req.Pin)
 	if err != nil {
 		/** email atau phone number and pass not match */
 		return err, nil
@@ -67,11 +43,11 @@ func (lu *loginUsecase) Handle(req LoginRequest) (error, interface{}) {
 	_, usr := lu.uRepo.Find(userID)
 	_ = lu.uRepo.SetLastLogin(usr)
 
-	return nil, lu.tokenUC.ClaimToken(usr)
+	return nil, lu.ClaimToken(usr)
 }
 
-func (lu *loginUsecase) validateEmail(email string) (error, *model.UserEmail) {
-	err, ue := lu.uEmailRepo.GetByEmail(email)
+func (lu handle) validateEmail(email string) (error, *model.UserEmail) {
+	err, ue := lu.ueRepo.GetByEmail(email)
 	if ue != nil && ue.Email != "" && !ue.Active {
 		return errors.New("Please verify email before"), ue
 	}
@@ -81,8 +57,8 @@ func (lu *loginUsecase) validateEmail(email string) (error, *model.UserEmail) {
 	return nil, ue
 }
 
-func (lu *loginUsecase) validatePassword(userID uint64, pass string) error {
-	err, upass := lu.uPassRepo.GetActiveByUser(userID)
+func (lu handle) validatePassword(userID uint64, pass string) error {
+	err, upass := lu.upRepo.GetActiveByUser(userID)
 	if err != nil {
 		return errors.New("Check email and password")
 	}

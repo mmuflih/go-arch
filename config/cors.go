@@ -1,11 +1,12 @@
 package config
 
 import (
+	"net/http"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/mmuflih/envgo/conf"
-	"github.com/mmuflih/go-httplib/httplib"
-	"net/http"
+	"github.com/mmuflih/golib/logger"
 )
 
 /**
@@ -23,6 +24,6 @@ func InitCors(config conf.Config, api *mux.Router) http.Handler {
 	methods := handlers.AllowedMethods(methodsVal)
 	origins := handlers.AllowedOrigins(originsVal)
 	cors := handlers.CORS(headers, methods, origins)
-	apiCors := cors(httplib.Logger(api))
+	apiCors := cors(logger.Log(api))
 	return apiCors
 }

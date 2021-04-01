@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mmuflih/envgo/conf"
 	"github.com/mmuflih/go-di-arch/role"
-	"github.com/mmuflih/go-httplib/httplib"
+	"github.com/mmuflih/golib/middleware"
 )
 
 /**
@@ -33,7 +33,7 @@ func NewRoute(c conf.Config, handler http.Handler, router *mux.Router) *ServerRo
 	myrole[role.LEADER] = []string{role.LEADER, role.ADMIN}
 	myrole[role.USER] = []string{role.USER, role.LEADER, role.ADMIN}
 
-	httplib.InitJWTMiddlewareWithRole([]byte(c.GetString("key")), jwt.SigningMethodHS512, myrole)
+	middleware.InitJWTMiddlewareWithRole([]byte(c.GetString("key")), jwt.SigningMethodHS512, myrole)
 
 	for _, l := range c.GetStringSlice("env_label") {
 		fmt.Println(l)

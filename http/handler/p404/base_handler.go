@@ -1,21 +1,21 @@
-package extra
+package p404
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
-type P404Handler interface {
+type BaseHandler interface {
 	Handle(http.ResponseWriter, *http.Request)
 }
 
-type p404handler struct{}
+type baseH struct{}
 
-func NewP404Handler() P404Handler {
-	return &p404handler{}
+func NewBaseHandler() BaseHandler {
+	return &baseH{}
 }
 
-func (this p404handler) Handle(w http.ResponseWriter, r *http.Request) {
+func (this baseH) Handle(w http.ResponseWriter, r *http.Request) {
 	data := "Sssssst! Silence is golden..."
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNotFound)

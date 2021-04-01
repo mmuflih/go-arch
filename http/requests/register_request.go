@@ -1,4 +1,4 @@
-package user
+package requests
 
 /**
  * Created by Muhammad Muflih Kholidin
@@ -7,20 +7,8 @@ package user
  * muflic.24@gmail.com
  **/
 
-type registerRequest struct {
+type RegisterRequest struct {
 	FullName string `json:"full_name" valid:"required"`
 	Email    string `json:"email" valid:"email"`
 	Pin      string `json:"pin" valid:"required"`
-}
-
-func (rr registerRequest) GetName() string {
-	return rr.FullName
-}
-
-func (rr registerRequest) GetEmail() string {
-	return rr.Email
-}
-
-func (rr registerRequest) GetPin() string {
-	return rr.Pin
 }

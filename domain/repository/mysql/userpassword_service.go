@@ -30,9 +30,9 @@ type userPasswordRepo struct {
 	db *gorm.DB
 }
 
-func NewUserPasswordRepo(myConn *config.MyConn) UserPasswordRepository {
+func NewUserPasswordRepo(myConn *config.MySQL) UserPasswordRepository {
 	return &userPasswordRepo{
-		myConn.Conn1,
+		myConn.MainDB,
 	}
 }
 

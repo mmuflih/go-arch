@@ -1,10 +1,9 @@
 package provider
 
 import (
-	"github.com/mmuflih/go-di-arch/httphandler/extra"
-	"github.com/mmuflih/go-di-arch/httphandler/ping"
-	"github.com/mmuflih/go-di-arch/httphandler/user"
-	"go.uber.org/dig"
+	"github.com/mmuflih/go-di-arch/http/handler/auth"
+	"github.com/mmuflih/go-di-arch/http/handler/p404"
+	"github.com/mmuflih/go-di-arch/http/handler/ping"
 )
 
 /**
@@ -14,18 +13,12 @@ import (
  * at: 2019-02-06 19:47
 **/
 
-func BuildHandlerProvider(c *dig.Container) *dig.Container {
-	if err := c.Provide(ping.NewPingHandler); err != nil {
-		panic(err)
-	}
+func Handlers() []interface{} {
+	var h []interface{}
 
-	if err := c.Provide(extra.NewP404Handler); err != nil {
-		panic(err)
-	}
+	h = append(h, p404.NewBaseHandler)
+	h = append(h, ping.NewBaseHandler)
+	h = append(h, auth.NewBaseHandler)
 
-	if err := c.Provide(user.NewBaseHandler); err != nil {
-		panic(err)
-	}
-
-	return c
+	return h
 }

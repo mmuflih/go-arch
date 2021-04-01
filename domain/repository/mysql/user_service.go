@@ -67,6 +67,6 @@ func (us userService) FindBy(page, size int) *paginator.Paginator {
 	return paginatior
 }
 
-func NewUserRepo(myConn *config.MyConn) UserRepository {
-	return &userService{myConn.Conn1}
+func NewUserRepo(myConn *config.MySQL) UserRepository {
+	return &userService{myConn.MainDB}
 }

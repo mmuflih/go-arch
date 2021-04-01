@@ -2,7 +2,6 @@ package provider
 
 import (
 	"github.com/mmuflih/go-di-arch/domain/repository/mysql"
-	"go.uber.org/dig"
 )
 
 /**
@@ -12,15 +11,12 @@ import (
  * at: 2019-02-06 19:47
 **/
 
-func BuildRepositoryProvider(c *dig.Container) *dig.Container {
-	if err := c.Provide(mysql.NewUserRepo); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(mysql.NewUserPasswordRepo); err != nil {
-		panic(err)
-	}
-	if err := c.Provide(mysql.NewUserEmailRepo); err != nil {
-		panic(err)
-	}
-	return c
+func Repositories() []interface{} {
+	var r []interface{}
+
+	r = append(r, mysql.NewUserRepo)
+	r = append(r, mysql.NewUserPasswordRepo)
+	r = append(r, mysql.NewUserEmailRepo)
+
+	return r
 }

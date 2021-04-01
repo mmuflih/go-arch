@@ -24,9 +24,9 @@ type userEmailRepo struct {
 	db *gorm.DB
 }
 
-func NewUserEmailRepo(myConn *config.MyConn) UserEmailRepository {
+func NewUserEmailRepo(myConn *config.MySQL) UserEmailRepository {
 	return &userEmailRepo{
-		myConn.Conn1,
+		myConn.MainDB,
 	}
 }
 

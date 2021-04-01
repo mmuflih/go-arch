@@ -3,7 +3,7 @@ package user
 import (
 	"github.com/mmuflih/go-di-arch/app"
 	"github.com/mmuflih/go-di-arch/domain/model"
-	"github.com/mmuflih/go-di-arch/domain/repository/mysql"
+	"github.com/mmuflih/go-di-arch/http/requests"
 )
 
 /**
@@ -13,55 +13,33 @@ import (
  * muflic.24@gmail.com
  **/
 
-type RegisterUsecase interface {
-	Handle(RegisterRequest) (error, interface{})
-}
+func (ru handle) Register(req requests.RegisterRequest) (error, interface{}) {
+	tx := ru.uRepo.DBConn().Begin()
 
-type RegisterRequest interface {
-	GetName() string
-	GetPin() string
-	GetEmail() string
-}
-
-type registerUsecase struct {
-	userRepo         mysql.UserRepository
-	userEmailRepo    mysql.UserEmailRepository
-	userPasswordRepo mysql.UserPasswordRepository
-}
-
-func NewRegisterUsecase(userRepo mysql.UserRepository,
-	userEmailRepo mysql.UserEmailRepository,
-	userPasswordRepo mysql.UserPasswordRepository,
-) RegisterUsecase {
-	return &registerUsecase{userRepo, userEmailRepo, userPasswordRepo}
-}
-
-func (ru *registerUsecase) Handle(req RegisterRequest) (error, interface{}) {
-	tx := ru.userRepo.DBConn().Begin()
-
-	u := model.NewUser(req.GetName())
-	err := ru.userRepo.Save(u, tx)
+	var errs error
+	u := model.NewUser(req.FullName)
+	err := ru.uRepo.Save(u, tx)
 	if err != nil {
 		tx.Rollback()
-		return err, nil
+		return errs, nil
 	}
 
-	if req.GetEmail() != "" {
-		ue := model.NewUserEmail(u.ID, req.GetEmail())
-		err = ru.userEmailRepo.Save(ue, tx)
+	if req.Email != "" {
+		ue := model.NewUserEmail(u.ID, req.Email)
+		err = ru.ueRepo.Save(ue, tx)
 		if err != nil {
 			tx.Rollback()
-			return err, nil
+			return errs, nil
 		}
 	}
 
-	if req.GetPin() != "" {
-		pin := app.GeneratePassword(req.GetPin())
+	if req.Pin != "" {
+		pin := app.GeneratePassword(req.Pin)
 		up := model.NewUserPassword(u.ID, pin)
-		err = ru.userPasswordRepo.Save(up, tx)
+		err = ru.upRepo.Save(up, tx)
 		if err != nil {
 			tx.Rollback()
-			return err, nil
+			return errs, nil
 		}
 	}
 	tx.Commit()

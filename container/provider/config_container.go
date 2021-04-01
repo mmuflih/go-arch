@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mmuflih/envgo/conf"
 	"github.com/mmuflih/go-di-arch/config"
-	"github.com/mmuflih/go-httplib/httplib"
+	"github.com/mmuflih/golib/request"
 	"go.uber.org/dig"
 )
 
@@ -35,20 +35,20 @@ func BuildConfigProvider(c *dig.Container) *dig.Container {
 		panic(err)
 	}
 
-	if err = c.Provide(func(c conf.Config) (*config.MongoConnections, error) {
-		return config.NewMongoDB2(c)
+	if err = c.Provide(func(c conf.Config) (*config.MongoDB, error) {
+		return config.NewMongoDBConnections(c)
 	}); err != nil {
 		panic(err)
 	}
 
-	if err = c.Provide(func(c conf.Config) (*config.MyConn, error) {
-		return config.NewMysqlGormConn(c)
+	if err = c.Provide(func(c conf.Config) (*config.MySQL, error) {
+		return config.NewMySQLConnections(c)
 	}); err != nil {
 		panic(err)
 	}
 
-	err = c.Provide(func() httplib.RequestReader {
-		return httplib.NewMuxRequestReader()
+	err = c.Provide(func() request.Reader {
+		return request.NewMuxReader()
 	})
 	if err != nil {
 		panic(err)
