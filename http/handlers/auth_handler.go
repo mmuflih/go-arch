@@ -1,12 +1,11 @@
 package handlers
 
 import (
-	"net/http"
-
+	"github.com/gin-gonic/gin"
 	"github.com/mmuflih/go-arch/context/user"
 	"github.com/mmuflih/go-arch/http/core/request"
+	"github.com/mmuflih/go-arch/http/core/response"
 	"github.com/mmuflih/go-arch/http/requests"
-	"github.com/mmuflih/golib/response"
 )
 
 /**
@@ -16,10 +15,10 @@ import (
  * muflic.24@gmail.com
  **/
 
-type AuthHandler interface {
-	Register(w http.ResponseWriter, r *http.Request)
-	Login(w http.ResponseWriter, r *http.Request)
-	Me(w http.ResponseWriter, r *http.Request)
+type BaseHandler interface {
+	Register(c *gin.Context)
+	Login(c *gin.Context)
+	Me(c *gin.Context)
 }
 
 type authH struct {
@@ -35,30 +34,30 @@ func NewAuthHandler(handle user.Handler, read user.Reader,
 	return &authH{handle, read, auth, rr}
 }
 
-func (bh *authH) Register(w http.ResponseWriter, r *http.Request) {
+func (bh *baseHandler) Register(c *gin.Context) {
 	req := requests.RegisterRequest{}
-	err := request.RequestValidator(r, bh.rr, &req)
+	err := request.RequestValidator(c.Request, bh.rr, &req)
 	if err != nil {
-		response.Exception(w, err, 422)
+		response.Exception(c, err, 422)
 		return
 	}
 	err, resp := bh.handle.Register(req)
-	response.Json(w, resp, err)
+	response.Json(c, resp, err)
 }
 
-func (bh *authH) Login(w http.ResponseWriter, r *http.Request) {
+func (bh *baseHandler) Login(c *gin.Context) {
 	req := requests.LoginRequest{}
-	err := request.RequestValidator(r, bh.rr, &req)
+	err := request.RequestValidator(c.Request, bh.rr, &req)
 	if err != nil {
-		response.Exception(w, err, 422)
+		response.Exception(c, err, 422)
 		return
 	}
 	err, resp := bh.handle.Login(req)
-	response.Json(w, resp, err)
+	response.Json(c, resp, err)
 }
 
-func (bh *authH) Me(w http.ResponseWriter, r *http.Request) {
-	userID := bh.auth.GetUserID(r)
+func (bh *baseHandler) Me(c *gin.Context) {
+	userID := bh.auth.GetUserID(c.Request)
 	err, resp := bh.read.Me(userID)
-	response.Json(w, resp, err)
+	response.Json(c, resp, err)
 }

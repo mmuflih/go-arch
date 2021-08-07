@@ -2,8 +2,6 @@ package request
 
 import (
 	"net/http"
-
-	"github.com/mmuflih/golib/request"
 )
 
 /**
@@ -37,7 +35,7 @@ func (pr PaginationReq) GetQuery() string {
 	return pr.query
 }
 
-func (pr PaginationReq) FromRequest(rr request.Reader, r *http.Request) PaginationRequest {
+func (pr PaginationReq) FromRequest(rr Reader, r *http.Request) PaginationRequest {
 	page := rr.GetQueryInt(r, "page")
 	if page == 0 {
 		page = 1

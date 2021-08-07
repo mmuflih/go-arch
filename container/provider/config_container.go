@@ -1,13 +1,10 @@
 package provider
 
 import (
-	"net/http"
-
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 	"github.com/mmuflih/envgo/conf"
 	"github.com/mmuflih/go-arch/config"
-	lreq "github.com/mmuflih/go-arch/http/core/request"
-	"github.com/mmuflih/golib/request"
+	"github.com/mmuflih/go-arch/http/core/request"
 	"go.uber.org/dig"
 )
 
@@ -48,22 +45,15 @@ func BuildConfigProvider(c *dig.Container) *dig.Container {
 		panic(err)
 	}
 
-	err = c.Provide(func() lreq.Reader {
-		return request.NewMuxReader()
+	err = c.Provide(func() request.Reader {
+		return request.NewRequestReader()
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	err = c.Provide(func() *mux.Router {
-		return mux.NewRouter()
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	err = c.Provide(func(c conf.Config, api *mux.Router) http.Handler {
-		return config.InitCors(c, api)
+	err = c.Provide(func() *gin.Engine {
+		return gin.Default()
 	})
 	if err != nil {
 		panic(err)
