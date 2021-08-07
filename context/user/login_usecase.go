@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mmuflih/go-di-arch/app"
-	"github.com/mmuflih/go-di-arch/domain/model"
-	"github.com/mmuflih/go-di-arch/http/requests"
+	"github.com/mmuflih/go-arch/app"
+	"github.com/mmuflih/go-arch/domain/model"
+	"github.com/mmuflih/go-arch/http/requests"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -1,9 +1,9 @@
 package mysql
 
 import (
-	"github.com/mmuflih/go-di-arch/app"
-	"github.com/mmuflih/go-di-arch/config"
-	"github.com/mmuflih/go-di-arch/domain/model"
+	"github.com/mmuflih/go-arch/app"
+	"github.com/mmuflih/go-arch/config"
+	"github.com/mmuflih/go-arch/domain/model"
 	"gorm.io/gorm"
 )
 

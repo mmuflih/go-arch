@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/mmuflih/go-di-arch/container"
+	"github.com/mmuflih/go-arch/container"
 	"go.uber.org/dig"
 )
 

@@ -1,4 +1,4 @@
-package app
+package request
 
 import (
 	"errors"
@@ -25,7 +25,7 @@ func RequestValidator(r *http.Request, rr request.Reader, req interface{}) error
 		return err
 	}
 	if !result {
-		return errors.New("Validate error")
+		return errors.New("validate error")
 	}
 	return nil
 }

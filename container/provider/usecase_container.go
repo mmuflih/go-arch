@@ -1,8 +1,8 @@
 package provider
 
 import (
-	"github.com/mmuflih/go-di-arch/context/ping"
-	"github.com/mmuflih/go-di-arch/context/user"
+	"github.com/mmuflih/go-arch/context/ping"
+	"github.com/mmuflih/go-arch/context/user"
 )
 
 /**

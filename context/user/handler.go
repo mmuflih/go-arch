@@ -1,9 +1,9 @@
 package user
 
 import (
-	"github.com/mmuflih/go-di-arch/config"
-	"github.com/mmuflih/go-di-arch/domain/repository/mysql"
-	"github.com/mmuflih/go-di-arch/http/requests"
+	"github.com/mmuflih/go-arch/config"
+	"github.com/mmuflih/go-arch/domain/repository/mysql"
+	"github.com/mmuflih/go-arch/http/requests"
 )
 
 /**

@@ -21,7 +21,7 @@ func NewGetAuthUserUsecase() GetAuthUserUsecase {
 func (this getAuthUserUsecase) GetUserID(r *http.Request) uint64 {
 	userID, err := middleware.ExtractClaim(r, "user_id")
 	if err != nil {
-		fmt.Println("<> +> Get user id from token", err)
+		fmt.Println("<-> +> Get user id from token", err)
 		return 0
 	}
 	val, ok := userID.(float64)

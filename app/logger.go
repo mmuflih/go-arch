@@ -8,15 +8,15 @@ import (
 )
 
 func Logger(data ...interface{}) {
-	log.Println(flagInfo(), "::", data)
+	log.Println(flagInfo(), "-:-", data)
 }
 
 func Success(data ...interface{}) {
-	log.Println(flagInfo(), "=>", data)
+	log.Println(flagInfo(), "-->", data)
 }
 
 func Error(e error) error {
-	log.Println(flagErr(), "<>", e.Error())
+	log.Println(flagErr(), "<->", e.Error())
 	return e
 }
 

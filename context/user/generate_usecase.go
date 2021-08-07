@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/mmuflih/go-di-arch/domain/model"
+	"github.com/mmuflih/go-arch/domain/model"
 )
 
 /**

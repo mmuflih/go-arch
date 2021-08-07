@@ -1,9 +1,7 @@
 package provider
 
 import (
-	"github.com/mmuflih/go-di-arch/http/handler/auth"
-	"github.com/mmuflih/go-di-arch/http/handler/p404"
-	"github.com/mmuflih/go-di-arch/http/handler/ping"
+	"github.com/mmuflih/go-arch/http/handlers"
 )
 
 /**
@@ -16,9 +14,9 @@ import (
 func Handlers() []interface{} {
 	var h []interface{}
 
-	h = append(h, p404.NewBaseHandler)
-	h = append(h, ping.NewBaseHandler)
-	h = append(h, auth.NewBaseHandler)
+	h = append(h, handlers.NewPingHandler)
+	h = append(h, handlers.NewP404Handler)
+	h = append(h, handlers.NewAuthHandler)
 
 	return h
 }

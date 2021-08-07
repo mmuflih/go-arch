@@ -37,15 +37,15 @@ func (m Migration) Run() {
 	if strings.Contains(env, "dev") {
 		env = "development"
 	}
-	log.Println("=>", "Running on", env, "environment")
+	log.Println("-->", "Running on", env, "environment")
 	if env == "development" {
-		log.Println("=>", "Disabled Auto Migrate on", env, "environment")
+		log.Println("-->", "Disabled Auto Migrate on", env, "environment")
 		return
 	}
-	log.Println("=>", "Auto Migrate")
+	log.Println("-->", "Auto Migrate")
 	out, err := exec.Command("sql-migrate", "up", "--env="+env).Output()
 	if err != nil {
-		log.Println("<>", err, "Auto Migrate")
+		log.Println("<->", err, "Auto Migrate")
 		return
 	}
 	fmt.Printf("%s", out)

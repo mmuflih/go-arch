@@ -5,7 +5,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mmuflih/envgo/conf"
-	"github.com/mmuflih/go-di-arch/config"
+	"github.com/mmuflih/go-arch/config"
+	lreq "github.com/mmuflih/go-arch/http/core/request"
 	"github.com/mmuflih/golib/request"
 	"go.uber.org/dig"
 )
@@ -47,7 +48,7 @@ func BuildConfigProvider(c *dig.Container) *dig.Container {
 		panic(err)
 	}
 
-	err = c.Provide(func() request.Reader {
+	err = c.Provide(func() lreq.Reader {
 		return request.NewMuxReader()
 	})
 	if err != nil {

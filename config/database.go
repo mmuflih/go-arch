@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/mmuflih/envgo/conf"
-	"github.com/mmuflih/go-di-arch/app"
+	"github.com/mmuflih/go-arch/app"
 	"gopkg.in/mgo.v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

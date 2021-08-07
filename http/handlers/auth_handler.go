@@ -1,12 +1,11 @@
-package auth
+package handlers
 
 import (
 	"net/http"
 
-	"github.com/mmuflih/go-di-arch/app"
-	"github.com/mmuflih/go-di-arch/context/user"
-	"github.com/mmuflih/go-di-arch/http/requests"
-	"github.com/mmuflih/golib/request"
+	"github.com/mmuflih/go-arch/context/user"
+	"github.com/mmuflih/go-arch/http/core/request"
+	"github.com/mmuflih/go-arch/http/requests"
 	"github.com/mmuflih/golib/response"
 )
 
@@ -17,28 +16,28 @@ import (
  * muflic.24@gmail.com
  **/
 
-type BaseHandler interface {
+type AuthHandler interface {
 	Register(w http.ResponseWriter, r *http.Request)
 	Login(w http.ResponseWriter, r *http.Request)
 	Me(w http.ResponseWriter, r *http.Request)
 }
 
-type baseHandler struct {
+type authH struct {
 	handle user.Handler
 	read   user.Reader
 	auth   user.GetAuthUserUsecase
 	rr     request.Reader
 }
 
-func NewBaseHandler(handle user.Handler, read user.Reader,
+func NewAuthHandler(handle user.Handler, read user.Reader,
 	auth user.GetAuthUserUsecase,
-	rr request.Reader) BaseHandler {
-	return &baseHandler{handle, read, auth, rr}
+	rr request.Reader) AuthHandler {
+	return &authH{handle, read, auth, rr}
 }
 
-func (bh *baseHandler) Register(w http.ResponseWriter, r *http.Request) {
+func (bh *authH) Register(w http.ResponseWriter, r *http.Request) {
 	req := requests.RegisterRequest{}
-	err := app.RequestValidator(r, bh.rr, &req)
+	err := request.RequestValidator(r, bh.rr, &req)
 	if err != nil {
 		response.Exception(w, err, 422)
 		return
@@ -47,9 +46,9 @@ func (bh *baseHandler) Register(w http.ResponseWriter, r *http.Request) {
 	response.Json(w, resp, err)
 }
 
-func (bh *baseHandler) Login(w http.ResponseWriter, r *http.Request) {
+func (bh *authH) Login(w http.ResponseWriter, r *http.Request) {
 	req := requests.LoginRequest{}
-	err := app.RequestValidator(r, bh.rr, &req)
+	err := request.RequestValidator(r, bh.rr, &req)
 	if err != nil {
 		response.Exception(w, err, 422)
 		return
@@ -58,7 +57,7 @@ func (bh *baseHandler) Login(w http.ResponseWriter, r *http.Request) {
 	response.Json(w, resp, err)
 }
 
-func (bh *baseHandler) Me(w http.ResponseWriter, r *http.Request) {
+func (bh *authH) Me(w http.ResponseWriter, r *http.Request) {
 	userID := bh.auth.GetUserID(r)
 	err, resp := bh.read.Me(userID)
 	response.Json(w, resp, err)

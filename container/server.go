@@ -9,7 +9,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/mmuflih/envgo/conf"
-	"github.com/mmuflih/go-di-arch/role"
+	"github.com/mmuflih/go-arch/role"
 	"github.com/mmuflih/golib/middleware"
 )
 

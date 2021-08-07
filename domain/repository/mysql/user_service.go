@@ -3,8 +3,8 @@ package mysql
 import (
 	"time"
 
-	"github.com/mmuflih/go-di-arch/config"
-	"github.com/mmuflih/go-di-arch/domain/model"
+	"github.com/mmuflih/go-arch/config"
+	"github.com/mmuflih/go-arch/domain/model"
 	paginator "github.com/mmuflih/gorm-paginator"
 	"gorm.io/gorm"
 )
