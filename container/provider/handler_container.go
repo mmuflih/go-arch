@@ -1,8 +1,6 @@
 package provider
 
-import (
-	"github.com/mmuflih/go-arch/http/handlers"
-)
+import "github.com/mmuflih/go-arch/http/handlers"
 
 /**
  * Created by Muhammad Muflih Kholidin

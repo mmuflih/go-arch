@@ -3,11 +3,11 @@ package container
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gorilla/mux"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"github.com/mmuflih/envgo/conf"
 	"github.com/mmuflih/go-arch/role"
 	"github.com/mmuflih/golib/middleware"
@@ -21,12 +21,11 @@ import (
 **/
 
 type ServerRoute struct {
-	config  conf.Config
-	handler http.Handler
-	router  *mux.Router
+	config conf.Config
+	router *gin.Engine
 }
 
-func NewRoute(c conf.Config, handler http.Handler, router *mux.Router) *ServerRoute {
+func NewRoute(c conf.Config, router *gin.Engine) *ServerRoute {
 	myrole := make(map[string][]string)
 
 	myrole[role.ADMIN] = []string{role.ADMIN}
@@ -39,11 +38,25 @@ func NewRoute(c conf.Config, handler http.Handler, router *mux.Router) *ServerRo
 		fmt.Println(l)
 	}
 
-	return &ServerRoute{c, handler, router}
+	/** init cors */
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     c.GetStringSlice("cors.allowed_origins"),
+		AllowMethods:     c.GetStringSlice("cors.allowed_methods"),
+		AllowHeaders:     c.GetStringSlice("cors.allowed_headers"),
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://github.com"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
+
+	return &ServerRoute{c, router}
 }
 
 func (s *ServerRoute) Run() {
 	log.Println("Application is running at ", time.Now().Format("2006-01-02 15:04:05.000"))
-	log.Println("Server listen on", s.config.GetString(`server.address`))
-	log.Fatal(http.ListenAndServe(s.config.GetString(`server.address`), s.handler))
+	port := s.config.GetString(`server.address`)
+	gin.SetMode(s.config.GetString("env"))
+	s.router.Run(port)
 }

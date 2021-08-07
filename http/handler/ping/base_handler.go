@@ -1,4 +1,4 @@
-package handlers
+package ping
 
 import (
 	"github.com/gin-gonic/gin"
@@ -7,20 +7,20 @@ import (
 	"github.com/mmuflih/go-arch/http/requests"
 )
 
-type PingHandler interface {
+type BaseHandler interface {
 	Handle(c *gin.Context)
 }
 
-type pingH struct {
+type baseH struct {
 	puc ping.PingUsecase
 }
 
-func NewPingHandler(puc ping.PingUsecase) PingHandler {
-	return &pingH{puc}
+func NewBaseHandler(puc ping.PingUsecase) BaseHandler {
+	return &baseH{puc}
 }
 
-func (ph *pingH) Handle(c *gin.Context) {
+func (this *baseH) Handle(c *gin.Context) {
 	req := requests.PingRequest{}
-	resp, err := ph.puc.Ping(req)
+	resp, err := this.puc.Ping(req)
 	response.Json(c, resp, err)
 }

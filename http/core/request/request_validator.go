@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/mmuflih/golib/request"
 )
 
 /**
@@ -15,7 +14,7 @@ import (
  * muflic.24@gmail.com
  **/
 
-func RequestValidator(r *http.Request, rr request.Reader, req interface{}) error {
+func RequestValidator(r *http.Request, rr Reader, req interface{}) error {
 	err := rr.GetJsonData(r, &req)
 	if err != nil {
 		return err
