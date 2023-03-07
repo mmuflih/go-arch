@@ -14,7 +14,7 @@ require (
 	github.com/mmuflih/gorm-paginator v1.4.2
 	github.com/satori/go.uuid v1.2.0
 	go.uber.org/dig v1.12.0
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
+	golang.org/x/crypto v0.1.0
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	gorm.io/driver/mysql v1.1.1
 	gorm.io/gorm v1.21.12
